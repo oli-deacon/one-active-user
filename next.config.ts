@@ -21,6 +21,17 @@ const securityHeaders = [
     value: "strict-origin-when-cross-origin",
   },
   {
+    key: "Permissions-Policy",
+    value: [
+      "camera=()",
+      "microphone=()",
+      "geolocation=()",
+      "payment=()",
+      "usb=()",
+      "bluetooth=()",
+    ].join(", "),
+  },
+  {
     key: "X-Content-Type-Options",
     value: "nosniff",
   },
