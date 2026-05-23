@@ -1,5 +1,6 @@
 "use server";
 
+import { enforceSubmissionRateLimit, isLikelyBotSubmission } from "@/lib/submission-guard";
 import { handleSubmission, parseBuildSubmission, parseStorySubmission } from "@/lib/submissions";
 
 type ActionState = {
@@ -20,6 +21,25 @@ export async function submitContribution(
   formData: FormData,
 ): Promise<ActionState> {
   const raw = normalizeFormData(formData);
+
+  if (isLikelyBotSubmission(raw.website)) {
+    return {
+      success: true,
+      message:
+        "Thanks for sending this through. Submissions are reviewed manually, and the rough edges are welcome.",
+      fieldErrors: {},
+    };
+  }
+
+  const rateLimitResult = await enforceSubmissionRateLimit();
+  if (!rateLimitResult.allowed) {
+    return {
+      success: false,
+      message: rateLimitResult.message,
+      fieldErrors: {},
+    };
+  }
+
   const submissionType = raw.submissionType === "story" ? "story" : "build";
 
   if (submissionType === "build") {

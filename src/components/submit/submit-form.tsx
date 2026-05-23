@@ -79,6 +79,12 @@ export function SubmitForm() {
 
       <form action={formAction} className="mt-8 space-y-5">
         <input type="hidden" name="submissionType" value={mode} />
+        <div className="hidden" aria-hidden="true">
+          <label>
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2">
           <label className="block">
