@@ -1,14 +1,10 @@
 "use server";
 
 import { enforceSubmissionRateLimit, isLikelyBotSubmission } from "@/lib/submission-guard";
+import { processSubmission, type SubmissionActionState } from "@/lib/submission-service";
 import { handleSubmission, parseBuildSubmission, parseStorySubmission } from "@/lib/submissions";
 
-type ActionState = {
-  success: boolean;
-  message: string;
-  fieldErrors: Record<string, string[]>;
-  submissionType?: "build" | "story";
-};
+type ActionState = SubmissionActionState;
 
 function normalizeFormData(formData: FormData) {
   return Object.fromEntries(
@@ -22,80 +18,60 @@ export async function submitContribution(
 ): Promise<ActionState> {
   const raw = normalizeFormData(formData);
 
-  if (isLikelyBotSubmission(raw.website)) {
-    return {
-      success: true,
-      message:
-        "Thanks for sending this through. Submissions are reviewed manually, and the rough edges are welcome.",
-      fieldErrors: {},
-    };
-  }
+  return processSubmission(raw, {
+    enforceSubmissionRateLimit,
+    handleSubmission,
+    isLikelyBotSubmission,
+    parseBuildSubmission(input) {
+      const parsed = parseBuildSubmission({
+        submissionType: "build",
+        submitterName: input.submitterName,
+        email: input.email,
+        projectName: input.projectName,
+        builtWhat: input.builtWhat,
+        friction: input.friction,
+        whyExistingToolsWereNotEnough: input.whyExistingToolsWereNotEnough,
+        whoItIsFor: input.whoItIsFor,
+        howItIsUsedNow: input.howItIsUsedNow,
+        isAnyoneElseUsingIt: input.isAnyoneElseUsingIt,
+        whatItTaughtYou: input.whatItTaughtYou,
+        linkOrScreenshots: input.linkOrScreenshots,
+      });
 
-  const rateLimitResult = await enforceSubmissionRateLimit();
-  if (!rateLimitResult.allowed) {
-    return {
-      success: false,
-      message: rateLimitResult.message,
-      fieldErrors: {},
-    };
-  }
+      if (!parsed.success) {
+        return {
+          success: false as const,
+          fieldErrors: parsed.error.flatten().fieldErrors,
+        };
+      }
 
-  const submissionType = raw.submissionType === "story" ? "story" : "build";
-
-  if (submissionType === "build") {
-    const parsed = parseBuildSubmission({
-      submissionType,
-      submitterName: raw.submitterName,
-      email: raw.email,
-      projectName: raw.projectName,
-      builtWhat: raw.builtWhat,
-      friction: raw.friction,
-      whyExistingToolsWereNotEnough: raw.whyExistingToolsWereNotEnough,
-      whoItIsFor: raw.whoItIsFor,
-      howItIsUsedNow: raw.howItIsUsedNow,
-      isAnyoneElseUsingIt: raw.isAnyoneElseUsingIt,
-      whatItTaughtYou: raw.whatItTaughtYou,
-      linkOrScreenshots: raw.linkOrScreenshots,
-    });
-
-    if (!parsed.success) {
       return {
-        success: false,
-        message: "A few details still need attention before we can review this.",
-        fieldErrors: parsed.error.flatten().fieldErrors,
-        submissionType,
+        success: true as const,
+        data: parsed.data,
       };
-    }
+    },
+    parseStorySubmission(input) {
+      const parsed = parseStorySubmission({
+        submissionType: "story",
+        submitterName: input.submitterName,
+        email: input.email,
+        pieceSummary: input.pieceSummary,
+        whyItBelongs: input.whyItBelongs,
+        experienceSource: input.experienceSource,
+        draftOrOutline: input.draftOrOutline,
+      });
 
-    await handleSubmission(parsed.data);
-  } else {
-    const parsed = parseStorySubmission({
-      submissionType,
-      submitterName: raw.submitterName,
-      email: raw.email,
-      pieceSummary: raw.pieceSummary,
-      whyItBelongs: raw.whyItBelongs,
-      experienceSource: raw.experienceSource,
-      draftOrOutline: raw.draftOrOutline,
-    });
+      if (!parsed.success) {
+        return {
+          success: false as const,
+          fieldErrors: parsed.error.flatten().fieldErrors,
+        };
+      }
 
-    if (!parsed.success) {
       return {
-        success: false,
-        message: "A few details still need attention before we can review this.",
-        fieldErrors: parsed.error.flatten().fieldErrors,
-        submissionType,
+        success: true as const,
+        data: parsed.data,
       };
-    }
-
-    await handleSubmission(parsed.data);
-  }
-
-  return {
-    success: true,
-    message:
-      "Thanks for sending this through. Submissions are reviewed manually, and the rough edges are welcome.",
-    fieldErrors: {},
-    submissionType,
-  };
+    },
+  });
 }

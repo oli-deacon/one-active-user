@@ -1,7 +1,18 @@
+import crypto from "node:crypto";
+
+import { getCache } from "@vercel/functions";
 import { headers } from "next/headers";
+
+import {
+  DEFAULT_RATE_LIMIT_MESSAGE,
+  enforceSlidingWindowRateLimit,
+} from "./submission-rate-limit";
 
 const SUBMISSION_WINDOW_MS = 10 * 60 * 1000;
 const SUBMISSION_LIMIT = 5;
+const SUBMISSION_CACHE_NAMESPACE = "submission-rate-limit";
+const SUBMISSION_RATE_LIMIT_UNAVAILABLE_MESSAGE =
+  "We couldn't verify the submission limit just now. Please try again shortly.";
 
 const submissionAttempts = new Map<string, number[]>();
 
@@ -14,8 +25,52 @@ function getClientIp(headerStore: Headers) {
   return headerStore.get("x-real-ip") ?? headerStore.get("cf-connecting-ip");
 }
 
-function pruneAttempts(now: number, attempts: number[]) {
-  return attempts.filter((timestamp) => now - timestamp < SUBMISSION_WINDOW_MS);
+function getSubmissionKey(clientIp: string) {
+  return crypto.createHash("sha256").update(clientIp).digest("hex");
+}
+
+async function enforceLocalRateLimit(clientIp: string) {
+  return enforceSlidingWindowRateLimit({
+    key: clientIp,
+    limit: SUBMISSION_LIMIT,
+    message: DEFAULT_RATE_LIMIT_MESSAGE,
+    store: {
+      async loadAttempts(key) {
+        return submissionAttempts.get(key) ?? [];
+      },
+      async saveAttempts(key, attempts) {
+        submissionAttempts.set(key, attempts);
+      },
+    },
+    windowMs: SUBMISSION_WINDOW_MS,
+  });
+}
+
+async function enforceVercelRateLimit(clientIp: string) {
+  const cache = getCache({ namespace: SUBMISSION_CACHE_NAMESPACE });
+  const cacheKey = getSubmissionKey(clientIp);
+
+  return enforceSlidingWindowRateLimit({
+    key: cacheKey,
+    limit: SUBMISSION_LIMIT,
+    message: DEFAULT_RATE_LIMIT_MESSAGE,
+    store: {
+      async loadAttempts(key) {
+        const cachedValue = await cache.get(key);
+
+        return Array.isArray(cachedValue)
+          ? cachedValue.filter((value): value is number => typeof value === "number")
+          : [];
+      },
+      async saveAttempts(key, attempts, ttlSeconds) {
+        await cache.set(key, attempts, {
+          ttl: ttlSeconds,
+          name: "submission-rate-limit",
+        });
+      },
+    },
+    windowMs: SUBMISSION_WINDOW_MS,
+  });
 }
 
 export async function enforceSubmissionRateLimit() {
@@ -26,22 +81,18 @@ export async function enforceSubmissionRateLimit() {
     return { allowed: true as const };
   }
 
-  const now = Date.now();
-  const recentAttempts = pruneAttempts(now, submissionAttempts.get(clientIp) ?? []);
-
-  if (recentAttempts.length >= SUBMISSION_LIMIT) {
-    submissionAttempts.set(clientIp, recentAttempts);
-
-    return {
-      allowed: false as const,
-      message: "Too many submissions came in from this connection. Please try again shortly.",
-    };
+  if (process.env.VERCEL === "1") {
+    try {
+      return await enforceVercelRateLimit(clientIp);
+    } catch {
+      return {
+        allowed: false as const,
+        message: SUBMISSION_RATE_LIMIT_UNAVAILABLE_MESSAGE,
+      };
+    }
   }
 
-  recentAttempts.push(now);
-  submissionAttempts.set(clientIp, recentAttempts);
-
-  return { allowed: true as const };
+  return enforceLocalRateLimit(clientIp);
 }
 
 export function isLikelyBotSubmission(value: string | undefined) {
