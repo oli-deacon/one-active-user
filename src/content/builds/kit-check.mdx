@@ -1,27 +1,30 @@
 ---
 name: kit-check
 slug: kit-check
-summary: A packing assistant for recurring trips that remembers context-specific gear and turns pre-trip uncertainty into a calm checklist.
-friction: Repeating the same type of trip still involved too much last-minute remembering, double-checking, and low-grade anxiety about forgotten items.
-whyExistingToolsWereNotEnough: Off-the-shelf checklist apps were flexible, but they did not reflect the situational logic of different trips, conditions, and habits over time.
-whoItIsFor: Its creator and anyone packing the same categories of trips with similar constraints.
-howItWasBuilt: A small web app with reusable trip templates, context toggles, and a practical interface tuned for the night before leaving.
-howItIsUsedNow: It comes out before trail weekends, race travel, and any trip where forgetting one specific piece of gear has outsized consequences.
-currentStatus: Stable and useful with occasional tweaks.
+summary: A small PWA that tells runners what to wear and whether to change route for tomorrow's run.
+friction: Translating tomorrow's weather into a quick pre-run decision is annoying to do every night.
+whyExistingToolsWereNotEnough: Weather apps show conditions, but not personal instructions. Running apps track workouts, but do not say things like "take gloves" or "use the sheltered route" based on your own rules.
+whoItIsFor: Runners with a regular schedule, especially early runners with repeat routes and fixed gear habits.
+howItWasBuilt: Built with Next.js, React, and TypeScript as an installable PWA. It uses Open-Meteo for forecast data, a simple rules engine for gear and route decisions, Web Push for alerts, and Vercel cron plus Blob for scheduling and storage.
+howItIsUsedNow: The runner saves a location, run time, and a few rules. Each evening, Kit Check generates a short weather-aware recommendation and can send it as a push notification to the installed app.
+currentStatus: Working MVP with live forecast preview, editable profile, rules, push notifications, and a nightly scheduled check.
 author: One Active User
 publishedAt: 2026-05-08
 tags:
-  - travel
-  - checklists
+  - running
+  - weather
+  - pwa
   - routines
 featured: true
-externalLink: https://example.com/kit-check
 screenshots:
-  - https://placehold.co/1200x800/ece5d9/715c48?text=Trip+Template
+  - /images/kit-check/kit-check-tomorrows-kit-check.png
+  - /images/kit-check/kit-check-homepage.png
 ---
 
-Kit Check demonstrates that personal software does not need to be technically ambitious to be meaningful.
+Kit Check is a focused personal tool for one recurring job: checking tomorrow's run conditions and turning them into a simple action list.
 
-Sometimes the value is simply that the tool understands the exact situation it is being used in. It knows what kind of trip this is, what changes with weather, and which omissions are costly enough to deserve their own prompts.
+Instead of showing raw forecast data, it maps weather to personal rules like taking gloves, packing a rain jacket, or choosing a more sheltered route.
 
-That is a small victory, but a real one.
+It feels hand-built in the best way. The scope is narrow, the logic reflects a real routine, and the output is designed for a glance rather than a deep dashboard.
+
+It is a good example of software that removes a small but repeated daily annoyance.

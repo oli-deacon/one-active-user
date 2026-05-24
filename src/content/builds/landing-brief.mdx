@@ -1,27 +1,28 @@
 ---
-name: landing-brief
+name: LandingBrief
 slug: landing-brief
-summary: A private drafting tool for turning scattered notes about a product idea into a clear landing-page brief in one sitting.
-friction: Writing landing pages from scratch kept turning into a context-switching mess of note fragments, tone decisions, and missing structure.
-whyExistingToolsWereNotEnough: Generic writing tools were fine at drafting, but they did not encode the particular sequence of questions needed to move from an idea to a coherent landing-page message.
-whoItIsFor: Primarily its creator, with occasional use by collaborators who need to sharpen a concept before writing.
-howItWasBuilt: A lightweight internal web app with structured prompts, prompt-chaining, and a simple export view for the finished brief.
-howItIsUsedNow: It is used whenever a new project needs to be framed quickly, especially before design or copywriting starts in earnest.
-currentStatus: Used regularly and quietly maintained.
+summary: A mobile-first progressive web app for quick country arrival briefings, designed to help travellers get their bearings before landing and keep key reference notes available offline.
+friction: Arriving in a new country often means juggling entry rules, airport-to-city decisions, payment quirks, and practical reminders while connectivity is unreliable.
+whyExistingToolsWereNotEnough: This project narrows the problem down to a faster, more portable format than a general travel guide. The implementation is built around short arrival briefs, offline caching, saved destinations, recent views, and per-country notes stored on-device.
+whoItIsFor: Travellers who want a compact, phone-friendly arrival brief rather than a broad destination guide.
+howItWasBuilt: Built as a frontend-only React app with Vite, TypeScript, Tailwind CSS v4, React Router, and `vite-plugin-pwa`. Country data is served from static JSON files and cached for offline use; saved briefs, recent countries, and notes live in `localStorage`.
+howItIsUsedNow: Users choose a destination from the home screen, open either a landing-mode or full brief, and can save that brief for offline access, revisit recent countries, and keep personal notes per country.
+currentStatus: Working prototype / seeded dataset. The repo currently ships sample country content for Singapore, Thailand, Malaysia, Vietnam, Hong Kong, South Korea, India, and San Francisco, with no backend yet.
 author: One Active User
 publishedAt: 2026-05-16
 tags:
-  - writing
-  - product
-  - internal-tools
+  - travel
+  - pwa
+  - offline
+  - utilities
 featured: true
-externalLink: https://example.com/landing-brief
 screenshots:
-  - https://placehold.co/1200x800/f4ecdf/7a5a42?text=Landing+Brief
+  - /images/landing-brief/country-page-sg.png
+  - /images/landing-brief/home-page.png
 ---
 
-Landing Brief exists because a loose pile of good ideas is not the same thing as a usable framing document.
+LandingBrief is a tightly scoped travel utility rather than a full planning product.
 
-Its job is not to write perfect copy. Its job is to force the right decisions in the right order, so the person using it can move from fog to structure without disappearing into a blank page.
+Its interface is built around the first moments after touchdown: what to clear at the airport, how to get into the city, what payment or practical details matter, and which official links to keep close.
 
-That makes it a good example of personal software. It is not a generic copywriting assistant. It is a tool shaped around a repeated moment in one person&apos;s workflow.
+What makes it feel hand-built is the emphasis on offline resilience over scale. The current version is static and frontend-only, but the app already supports cached country briefs, installable PWA behavior, saved destinations, recent history, and lightweight per-country notes for use on the device itself.
