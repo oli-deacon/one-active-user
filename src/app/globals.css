@@ -39,6 +39,16 @@ a {
   text-decoration: none;
 }
 
+:focus-visible {
+  outline: 0;
+}
+
+.focus-ring:focus-visible {
+  box-shadow:
+    0 0 0 2px rgba(246, 241, 232, 0.96),
+    0 0 0 4px rgba(162, 73, 54, 0.48);
+}
+
 img {
   max-width: 100%;
   height: auto;
