@@ -25,7 +25,7 @@ type HomeBuildCardProps = {
 export function Button({ href, variant = "primary", children }: ButtonProps) {
   const className =
     variant === "primary"
-      ? "bg-[var(--accent)] text-white hover:opacity-95"
+      ? "bg-[rgba(31,27,24,0.9)] text-[var(--background)] hover:bg-[rgba(31,27,24,0.96)]"
       : "border border-[var(--line)] bg-white/75 text-[var(--foreground)] hover:border-[rgba(31,27,24,0.28)] hover:bg-white";
 
   return (

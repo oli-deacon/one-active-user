@@ -6,7 +6,6 @@ import {
   SectionHeader,
   SubmissionPanel,
 } from "@/components/home/home-sections";
-import { siteConfig } from "@/lib/site";
 
 const categories = [
   {
@@ -57,7 +56,7 @@ export default function HomePage() {
               Personal software, curated carefully
             </p>
             <h1 className="mt-5 max-w-4xl text-5xl leading-[1.02] text-[var(--foreground)] sm:text-7xl">
-              {siteConfig.tagline}
+              Small software for real life
             </h1>
             <p className="mt-6 max-w-3xl text-xl leading-9 text-[var(--muted)]">
               Small tools, practical stories, and ideas from people making software for the lives
