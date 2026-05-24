@@ -9,9 +9,4 @@ export const siteConfig = {
     { href: "/builds", label: "Builds" },
     { href: "/submit", label: "Submit" },
   ],
-  whatCounts: [
-    "Software made in response to lived friction",
-    "Tools that earn their keep through repeated usefulness",
-    "Projects that fit one person precisely before they fit anyone else",
-  ],
 } as const;
