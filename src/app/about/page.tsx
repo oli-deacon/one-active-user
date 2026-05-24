@@ -12,12 +12,7 @@ export default function AboutPage() {
       <div className="prose max-w-3xl">
         <p>
           Most software spaces reward scale, polish, and startup potential. This one rewards
-          specificity, usefulness, honesty, and personal fit.
-        </p>
-        <p>
-          Personal software begins with recurring friction in someone&apos;s actual life. It might be a
-          clumsy planning workflow, an annoying gap between existing products, or a daily ritual
-          that deserves a tool shaped around it precisely.
+          specificity, usefulness, and personal fit.
         </p>
         <h2>Why now</h2>
         <p>

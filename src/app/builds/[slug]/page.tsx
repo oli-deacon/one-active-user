@@ -51,7 +51,6 @@ export default async function BuildPage({ params }: { params: Promise<{ slug: st
       </div>
 
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
-        <DetailSection title="What it is">{build.summary}</DetailSection>
         <DetailSection title="Friction">{build.friction}</DetailSection>
         <DetailSection title="Why existing tools were not enough">
           {build.whyExistingToolsWereNotEnough}

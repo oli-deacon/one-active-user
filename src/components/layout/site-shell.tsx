@@ -27,18 +27,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
       </header>
-      <main className="mx-auto w-full max-w-6xl px-6 pb-20 sm:px-10">{children}</main>
-      <footer className="mx-auto mt-12 w-full max-w-6xl border-t border-[var(--line)] px-6 py-8 sm:px-10">
-        <div className="flex flex-col gap-3 text-sm text-[var(--muted)] sm:flex-row sm:items-end sm:justify-between">
-          <p className="max-w-2xl">
-            One Active User is a home for personal software: specific tools, grounded stories,
-            and useful examples built in response to lived friction.
-          </p>
-          <p className="font-mono text-xs uppercase tracking-[0.22em]">
-            Built for editorial clarity, not scale theater.
-          </p>
-        </div>
-      </footer>
+      <main className="mx-auto w-full max-w-6xl px-6 pb-16 sm:px-10">{children}</main>
     </div>
   );
 }

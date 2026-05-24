@@ -10,7 +10,7 @@ export default async function BuildsPage() {
       <PageIntro
         eyebrow="Builds"
         title="Practical examples of personal software in the wild."
-        description="Each build profile makes the friction explicit: what problem kept showing up, why existing tools were not enough, and how the resulting software earns its keep."
+        description="A small collection of tools shaped by specific routines, constraints, and repeated use."
       />
       <div className="grid gap-6 lg:grid-cols-2">
         {builds.map((build) => (

@@ -24,9 +24,6 @@ export default async function HomePage() {
           <p className="mt-6 max-w-3xl text-xl leading-9 text-[var(--muted)]">
             {siteConfig.description}
           </p>
-          <p className="mt-6 max-w-2xl text-base leading-8 text-[var(--foreground)]/78">
-            Built for narrow, recurring problems that generic software never quite resolves.
-          </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/about"
@@ -90,10 +87,6 @@ export default async function HomePage() {
           If you have built something narrow, useful, and personally earned, it probably belongs
           here.
         </h2>
-        <p className="mt-5 max-w-2xl text-lg leading-8 text-[var(--muted)]">
-          The point is not scale. The point is fit: software that met recurring friction in a way
-          generic tools could not.
-        </p>
         <div className="mt-8 flex flex-wrap gap-4">
           <Link href="/submit" className="rounded-full bg-[var(--accent)] px-6 py-3 text-sm text-white">
             Submit a build or story
