@@ -37,7 +37,7 @@ type StorySpotlightProps = {
 export function Button({ href, variant = "primary", children }: ButtonProps) {
   const className =
     variant === "primary"
-      ? "bg-[var(--foreground)] text-[var(--background)] hover:bg-[rgba(23,20,17,0.94)]"
+      ? "border border-[rgba(123,96,75,0.18)] bg-[rgba(124,99,78,0.82)] text-[rgba(255,248,240,0.98)] shadow-[0_14px_40px_rgba(74,52,37,0.12)] hover:bg-[rgba(124,99,78,0.92)]"
       : variant === "light"
         ? "bg-[var(--background)] text-[var(--foreground)] hover:bg-[rgba(246,241,232,0.92)]"
       : "border border-[var(--line-strong)] bg-white/70 text-[var(--foreground)] hover:border-[rgba(23,20,17,0.34)] hover:bg-white";
